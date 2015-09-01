@@ -34,5 +34,5 @@ exports.ViewHelpers = class ViewHelpers
     days = []
     moment.lang @lang
     for i in [0..6]
-      days.push moment.weekdaysMin(i)
+      days.push moment.weekdaysMin(i).substr(0, `this.model.get('shortWeekdays') ? 1 : null`)
     days
