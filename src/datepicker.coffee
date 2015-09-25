@@ -11,6 +11,9 @@ module.exports = class Datepicker extends ViewHelpers
     @lang = model.get("lang") || "en"
     @builders = new Builders(@lang, moment)
     currentDate = model.get("active") || moment()
+    granularity = @getAttribute 'granularity'
+
+    if granularity is 'month' then return @gotoYearView currentDate
     @gotoMonthView currentDate
   
   create: (model, dom) ->
@@ -21,6 +24,8 @@ module.exports = class Datepicker extends ViewHelpers
       model.set "show", false unless @parent.contains(e.target)
 
   gotoMonthView: (date) ->
+    granularity = @getAttribute 'granularity'
+    return @select {fullDate: date} if granularity is 'month'
     @setCurrentDate date
     @monthView date
   
@@ -82,7 +87,8 @@ module.exports = class Datepicker extends ViewHelpers
     selectedMonth = date.month()
     currentDate = moment(@getCurrentDate())
     currentMonth = currentDate.month()
-    @gotoMonthView date  if selectedMonth isnt currentMonth
+    granularity = @getAttribute 'granularity'
+    @gotoMonthView date  if selectedMonth isnt currentMonth and granularity isnt 'month'
     @model.set "active", selectedDate.fullDate
     @model.set "show", false
 
